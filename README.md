@@ -6,4 +6,21 @@
 - Client and Service relation is contextual. It means A class can be a client and service at the same time base on context.
 
 ### How Client obtain relation to services:
+1. Instantiation
+2. Static Method Call
+3. Static Global Variable
+4. Receive references from 'outside'
+
+- The first 3 points are normal way to obtain relation to services. The last one comes from the concept of Dependency Injection.
+
+### Dependency Injection = providing services to clients from outside.
+
+### Three ways to "inject" services from "outside":
+1. Construction Injection
+2. Method Injection
+3. Property Injection
+
+- Method injection is commonly used in Java and it will not be used in Kotlin instead we can use property injection.
+
+
 
