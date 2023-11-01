@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hantash.dependancy_injection.Constants
 import com.hantash.dependancy_injection.R
 import com.hantash.dependancy_injection.networking.StackoverflowApi
+import com.hantash.dependancy_injection.questions.FetchQuestionsUseCase
 import com.hantash.dependancy_injection.questions.Question
 import com.hantash.dependancy_injection.screens.common.dialogs.ServerErrorDialogFragment
 import com.hantash.dependancy_injection.screens.questindetails.QuestionDetailsActivity
@@ -22,9 +23,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener {
     private lateinit var viewMvc: QuestionsListViewMvc
+    private lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-
-    private lateinit var stackoverflowApi: StackoverflowApi
 
     private var isDataLoaded = false
 
@@ -33,12 +33,7 @@ class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener
         viewMvc = QuestionsListViewMvc(LayoutInflater.from(this), null)
         setContentView(viewMvc.rootView)
 
-        // init retrofit
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        stackoverflowApi = retrofit.create(StackoverflowApi::class.java)
+        fetchQuestionsUseCase = FetchQuestionsUseCase()
     }
 
     override fun onStart() {
@@ -59,17 +54,12 @@ class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener
         coroutineScope.launch {
             viewMvc.showProgressIndication()
             try {
-                val response = stackoverflowApi.lastActiveQuestions(20)
-                if (response.isSuccessful && response.body() != null) {
-                    viewMvc.bindData(response.body()!!.questions)
-                    isDataLoaded = true
-                } else {
-                    onFetchFailed()
-                }
-            } catch (t: Throwable) {
-                Log.d("app-debug", "ERROR: ${t}\n${t.stackTrace}")
-                if (t !is CancellationException) {
-                    onFetchFailed()
+                when(val result = fetchQuestionsUseCase.fetchLatestQuestions()) {
+                    is FetchQuestionsUseCase.Result.SUCCESS -> {
+                        viewMvc.bindData(result.questions)
+                        isDataLoaded = true
+                    }
+                    is FetchQuestionsUseCase.Result.FAILURE -> onFetchFailed()
                 }
             } finally {
                 viewMvc.hideProgressIndication()
