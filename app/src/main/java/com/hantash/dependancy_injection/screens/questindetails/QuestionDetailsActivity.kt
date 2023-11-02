@@ -10,10 +10,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hantash.dependancy_injection.Constants
+import com.hantash.dependancy_injection.MyApplication
 import com.hantash.dependancy_injection.R
 import com.hantash.dependancy_injection.networking.StackoverflowApi
 import com.hantash.dependancy_injection.questions.FetchQuestionDetailUseCase
 import com.hantash.dependancy_injection.questions.FetchQuestionsUseCase
+import com.hantash.dependancy_injection.screens.ScreensNavigator
+import com.hantash.dependancy_injection.screens.common.dialogs.DialogsNavigator
 import com.hantash.dependancy_injection.screens.common.dialogs.ServerErrorDialogFragment
 import com.hantash.dependancy_injection.screens.common.toolbar.MyToolbar
 import kotlinx.coroutines.*
@@ -22,9 +25,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.Listener {
     private lateinit var viewMvc: QuestionDetailsViewMvc
-
     private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
-
+    private lateinit var dialogsNavigator: DialogsNavigator
+    private lateinit var screensNavigator: ScreensNavigator
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private lateinit var questionId: String
@@ -34,7 +37,9 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
         viewMvc = QuestionDetailsViewMvc(LayoutInflater.from(this), null)
         setContentView(viewMvc.rootView)
 
-        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase()
+        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).stackoverflowApi)
+        dialogsNavigator = DialogsNavigator(supportFragmentManager)
+        screensNavigator = ScreensNavigator(this)
 
         // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
@@ -71,9 +76,7 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
     }
 
     private fun onFetchFailed() {
-        supportFragmentManager.beginTransaction()
-                .add(ServerErrorDialogFragment.newInstance(), null)
-                .commitAllowingStateLoss()
+        dialogsNavigator.showServerError()
     }
 
     companion object {
@@ -86,6 +89,6 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
     }
 
     override fun onBackButtonClicked() {
-        onBackPressed()
+        screensNavigator.toBack()
     }
 }

@@ -11,19 +11,12 @@ import okhttp3.Dispatcher
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class FetchQuestionsUseCase {
+class FetchQuestionsUseCase(private val stackoverflowApi: StackoverflowApi) {
 
     sealed class Result {
         class SUCCESS(val questions: List<Question>) : Result()
         object FAILURE : Result()
     }
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val stackoverflowApi: StackoverflowApi = retrofit.create(StackoverflowApi::class.java)
 
     suspend fun fetchLatestQuestions(): Result {
         return withContext(Dispatchers.IO) {

@@ -11,10 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hantash.dependancy_injection.Constants
+import com.hantash.dependancy_injection.MyApplication
 import com.hantash.dependancy_injection.R
 import com.hantash.dependancy_injection.networking.StackoverflowApi
 import com.hantash.dependancy_injection.questions.FetchQuestionsUseCase
 import com.hantash.dependancy_injection.questions.Question
+import com.hantash.dependancy_injection.screens.ScreensNavigator
+import com.hantash.dependancy_injection.screens.common.dialogs.DialogsNavigator
 import com.hantash.dependancy_injection.screens.common.dialogs.ServerErrorDialogFragment
 import com.hantash.dependancy_injection.screens.questindetails.QuestionDetailsActivity
 import kotlinx.coroutines.*
@@ -24,6 +27,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener {
     private lateinit var viewMvc: QuestionsListViewMvc
     private lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
+    private lateinit var dialogsNavigator: DialogsNavigator
+    private lateinit var screensNavigator: ScreensNavigator
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private var isDataLoaded = false
@@ -33,7 +38,9 @@ class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener
         viewMvc = QuestionsListViewMvc(LayoutInflater.from(this), null)
         setContentView(viewMvc.rootView)
 
-        fetchQuestionsUseCase = FetchQuestionsUseCase()
+        fetchQuestionsUseCase = FetchQuestionsUseCase((application as MyApplication).stackoverflowApi)
+        dialogsNavigator = DialogsNavigator(supportFragmentManager)
+        screensNavigator = ScreensNavigator(this)
     }
 
     override fun onStart() {
@@ -68,9 +75,7 @@ class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener
     }
 
     private fun onFetchFailed() {
-        supportFragmentManager.beginTransaction()
-            .add(ServerErrorDialogFragment.newInstance(), null)
-            .commitAllowingStateLoss()
+        dialogsNavigator.showServerError()
     }
 
     override fun onRefreshClicked() {
@@ -78,6 +83,6 @@ class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener
     }
 
     override fun onQuestionClicked(question: Question) {
-        QuestionDetailsActivity.start(this, question.id)
+        screensNavigator.toQuestionDetail(question.id)
     }
 }
