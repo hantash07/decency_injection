@@ -22,5 +22,9 @@
 
 - Method injection is commonly used in Java and it will not be used in Kotlin instead we can use property injection.
 
+### Main Benefits:
+1. Non repetitive definations of the entire object.
+2. Code reusability
+
 
 
