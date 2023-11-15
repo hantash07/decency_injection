@@ -29,3 +29,10 @@
 ### Context Isolation:
 - By following dependency injection, it prevents memory leaks of accidentlly passing activity context into global object.
 
+### Distinction in Dependency Injection:
+- An object that encapsulate data only does not need to be injected outside. Only an object which encapsulate behaviour needed to be injected outside.
+
+### Dependency Injection Architecture Patterns deals with objects not data structure.
+
+
+
