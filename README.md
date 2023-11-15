@@ -26,5 +26,6 @@
 1. Non repetitive definations of the entire object.
 2. Code reusability
 
-
+### Context Isolation:
+- By following dependency injection, it prevents memory leaks of accidentlly passing activity context into global object.
 
