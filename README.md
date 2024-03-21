@@ -1,4 +1,4 @@
-## Dependency Injection
+# Dependency Injection
 
 ### Dependency
 - It means a class is dependent to another class.
@@ -34,5 +34,5 @@
 
 ### Dependency Injection Architecture Patterns deals with objects not data structure.
 
-
+## Dagger 2
 
