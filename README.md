@@ -1,4 +1,4 @@
-# Dependency Injection
+## Dependency Injection
 
 ### Dependency
 - It means a class is dependent to another class.
@@ -34,5 +34,9 @@
 
 ### Dependency Injection Architecture Patterns deals with objects not data structure.
 
-## Dagger 2
-
+### Dagger 2
+- Components are interfaces annotated with @Component
+- Component contains list of modules
+- Modules are classes annotated with @Module
+- Methods in modules that provide services are annotated with @Provides
+- Provided services can be used as method arguments in other provider mwthods
