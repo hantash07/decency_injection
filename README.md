@@ -40,3 +40,6 @@
 - Modules are classes annotated with @Module
 - Methods in modules that provide services are annotated with @Provides
 - Provided services can be used as method arguments in other provider mwthods
+- Scopes are annotations, annotated with @Scope
+- Components that provide scoped service (scoped provider) must be scoped
+- All clients get the same instance of a scoped service from the same instance of a component
