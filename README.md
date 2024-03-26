@@ -43,3 +43,5 @@
 - Scopes are annotations, annotated with @Scope
 - Components that provide scoped service (scoped provider) must be scoped
 - All clients get the same instance of a scoped service from the same instance of a component
+- Void methods with single argument defined on component class generates injectors for the type of that argumment
+- Client's non private and non final properties annotated with @Inject designate injection targets
