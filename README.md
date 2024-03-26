@@ -45,3 +45,9 @@
 - All clients get the same instance of a scoped service from the same instance of a component
 - Void methods with single argument defined on component class generates injectors for the type of that argumment
 - Client's non private and non final properties annotated with @Inject designate injection targets
+- A component can be dependent into other components
+- Component B that depends on Component A has implicit access to all services (@Provide methods) exposed by Component A
+- Services from Component A can be injected by Component B
+- Services from Component A can be consumed inside modules of Component B
+
+
