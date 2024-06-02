@@ -34,7 +34,7 @@
 
 ### Dependency Injection Architecture Patterns deals with objects not data structure.
 
-### Dagger 2
+### Dagger 2 - Conventions
 - Components are interfaces annotated with @Component
 - Component contains list of modules
 - Modules are classes annotated with @Module
@@ -43,6 +43,7 @@
 - Scopes are annotations, annotated with @Scope
 - Components that provide scoped service (scoped provider) must be scoped
 - All clients get the same instance of a scoped service from the same instance of a component
+- Basically, Components are injectors, they know how to provide (inject) the constructed objects from module into their clients
 - Void methods with single argument defined on component class generates injectors for the type of that argumment
 - Client's non private and non final properties annotated with @Inject designate injection targets
 - A component can be dependent into other components
