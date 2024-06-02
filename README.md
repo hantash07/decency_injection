@@ -35,20 +35,35 @@
 ### Dependency Injection Architecture Patterns deals with objects not data structure.
 
 ### Dagger 2 - Conventions
+#### Components
 - Components are interfaces annotated with @Component
 - Component contains list of modules
+#### Modules and Providers
 - Modules are classes annotated with @Module
 - Methods in modules that provide services are annotated with @Provides
 - Provided services can be used as method arguments in other provider mwthods
 - Scopes are annotations, annotated with @Scope
+#### Scoped
 - Components that provide scoped service (scoped provider) must be scoped
 - All clients get the same instance of a scoped service from the same instance of a component
+#### Component as injector
 - Basically, Components are injectors, they know how to provide (inject) the constructed objects from module into their clients
 - Void methods with single argument defined on component class generates injectors for the type of that argumment
 - Client's non private and non final properties annotated with @Inject designate injection targets
+#### Dependent Component
 - A component can be dependent into other components
 - Component B that depends on Component A has implicit access to all services (@Provide methods) exposed by Component A
-- Services from Component A can be injected by Component B
-- Services from Component A can be consumed inside modules of Component B
+  - Services from Component A can be injected by Component B
+  - Services from Component A can be consumed inside modules of Component B
+- Services needs to be defined explicitly inside components
+#### Sub component
+- Subcomponent specified by @Subcomponent annotations
+- Parent component exposes factory method which return subcomponent
+- The argument of factory method are Subcomponent's module
+- Subcomponent gets access to all services provided by parent.
+- Don't need to explicitly define the services in parent component.
+
+
+
 
 
