@@ -60,10 +60,16 @@
 - Subcomponent specified by @Subcomponent annotations
 - Parent component exposes factory method which return subcomponent
 - The argument of factory method are Subcomponent's module
-- Subcomponent gets access to all services provided by parent.
-- Don't need to explicitly define the services in parent component.
-
-
+- Subcomponent gets access to all services provided by parent
+- Don't need to explicitly define the services in parent component
+#### Multi Module
+- Component can use more than one module
+- Modules of a single component share the same object graph
+- Dagger automatically instantiates modules with no argument constructors
+- Modules having no argument constructors can only be used for multi module purpose
+#### Automatic Discovery of Services (Instances)
+- Dagger can automatically discover services having a public constructor annotated with @inject annotation
+- Automatic discovered services can be scoped
 
 
 
