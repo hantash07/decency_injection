@@ -3,19 +3,19 @@ package com.hantash.dependancy_injection.screens.questindetails
 import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hantash.dependancy_injection.R
-import com.hantash.dependancy_injection.questions.Question
-import com.hantash.dependancy_injection.screens.common.baseviewmvc.BaseViewMvc
+import com.hantash.dependancy_injection.questions.QuestionWithBody
+import com.hantash.dependancy_injection.screens.common.image_loader.ImageLoader
+import com.hantash.dependancy_injection.screens.common.viewmvc.BaseViewMvc
 import com.hantash.dependancy_injection.screens.common.toolbar.MyToolbar
-import com.hantash.dependancy_injection.screens.questionlist.QuestionsListViewMvc
 
 class QuestionDetailsViewMvc (
     private val layoutInflater: LayoutInflater,
+    private val imageLoader: ImageLoader,
     private val parent: ViewGroup?
 ): BaseViewMvc<QuestionDetailsViewMvc.Listener>(
     layoutInflater,
@@ -28,9 +28,13 @@ class QuestionDetailsViewMvc (
 
     private var toolbar: MyToolbar
     private var swipeRefresh: SwipeRefreshLayout
+    private var ivUser: ImageView
+    private var txtUserName: TextView
     private var txtQuestionBody: TextView
 
     init {
+        ivUser = findViewById(R.id.iv_user)
+        txtUserName = findViewById(R.id.txt_user_name)
         txtQuestionBody = findViewById(R.id.txt_question_body)
 
         // init toolbar
@@ -46,13 +50,15 @@ class QuestionDetailsViewMvc (
         swipeRefresh.isEnabled = false
     }
 
-    fun updateQuestion(questionBody: String) {
+    fun updateQuestion(question: QuestionWithBody) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            txtQuestionBody.text = Html.fromHtml(questionBody, Html.FROM_HTML_MODE_LEGACY)
+            txtQuestionBody.text = Html.fromHtml(question.body, Html.FROM_HTML_MODE_LEGACY)
         } else {
             @Suppress("DEPRECATION")
-            txtQuestionBody.text = Html.fromHtml(questionBody)
+            txtQuestionBody.text = Html.fromHtml(question.body)
         }
+        txtUserName.text = question.user.name
+        imageLoader.loadImage(question.user.imageUrl, ivUser)
     }
 
     fun showProgressIndication() {

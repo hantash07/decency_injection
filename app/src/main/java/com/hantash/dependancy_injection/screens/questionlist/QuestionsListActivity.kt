@@ -1,46 +1,33 @@
 package com.hantash.dependancy_injection.screens.questionlist
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.hantash.dependancy_injection.Constants
-import com.hantash.dependancy_injection.MyApplication
-import com.hantash.dependancy_injection.R
-import com.hantash.dependancy_injection.networking.StackoverflowApi
 import com.hantash.dependancy_injection.questions.FetchQuestionsUseCase
 import com.hantash.dependancy_injection.questions.Question
+import com.hantash.dependancy_injection.screens.BaseActivity
 import com.hantash.dependancy_injection.screens.ScreensNavigator
 import com.hantash.dependancy_injection.screens.common.dialogs.DialogsNavigator
-import com.hantash.dependancy_injection.screens.common.dialogs.ServerErrorDialogFragment
-import com.hantash.dependancy_injection.screens.questindetails.QuestionDetailsActivity
+import com.hantash.dependancy_injection.screens.common.viewmvc.ViewMvcFactory
 import kotlinx.coroutines.*
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class QuestionsListActivity : AppCompatActivity(), QuestionsListViewMvc.Listener {
+class QuestionsListActivity : BaseActivity(), QuestionsListViewMvc.Listener {
+    @Inject lateinit var viewMvcFactory: ViewMvcFactory
+    @Inject lateinit var screensNavigator: ScreensNavigator
+    @Inject lateinit var dialogsNavigator: DialogsNavigator
+    @Inject lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
+
     private lateinit var viewMvc: QuestionsListViewMvc
-    private lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
-    private lateinit var dialogsNavigator: DialogsNavigator
-    private lateinit var screensNavigator: ScreensNavigator
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private var isDataLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewMvc = QuestionsListViewMvc(LayoutInflater.from(this), null)
-        setContentView(viewMvc.rootView)
+        presentationComponent.inject(this)
 
-        fetchQuestionsUseCase = FetchQuestionsUseCase((application as MyApplication).stackoverflowApi)
-        dialogsNavigator = DialogsNavigator(supportFragmentManager)
-        screensNavigator = ScreensNavigator(this)
+        super.onCreate(savedInstanceState)
+        viewMvc = viewMvcFactory.newQuestionsListViewMvc(null)
+        setContentView(viewMvc.rootView)
     }
 
     override fun onStart() {

@@ -1,4 +1,4 @@
-package com.hantash.dependancy_injection.screens.common.baseviewmvc
+package com.hantash.dependancy_injection.screens.common.viewmvc
 
 import android.view.LayoutInflater
 import android.view.View

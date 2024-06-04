@@ -1,18 +1,15 @@
 package com.hantash.dependancy_injection.screens.questionlist
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hantash.dependancy_injection.R
 import com.hantash.dependancy_injection.questions.Question
-import com.hantash.dependancy_injection.screens.common.baseviewmvc.BaseViewMvc
-import com.hantash.dependancy_injection.screens.questindetails.QuestionDetailsActivity
+import com.hantash.dependancy_injection.screens.common.viewmvc.BaseViewMvc
 
 class QuestionsListViewMvc(
     private val layoutInflater: LayoutInflater,

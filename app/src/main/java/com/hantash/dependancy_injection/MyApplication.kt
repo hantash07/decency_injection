@@ -1,21 +1,16 @@
 package com.hantash.dependancy_injection
 
 import android.app.Application
-import com.hantash.dependancy_injection.networking.StackoverflowApi
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.hantash.dependancy_injection.common.app.AppComponent
+import com.hantash.dependancy_injection.common.app.AppModule
 
 class MyApplication: Application() {
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val stackoverflowApi: StackoverflowApi = retrofit.create(StackoverflowApi::class.java)
+//    public lateinit var appComposition: AppComponent
 
     override fun onCreate() {
         super.onCreate()
+//        appComposition = AppModule()
     }
 
 }

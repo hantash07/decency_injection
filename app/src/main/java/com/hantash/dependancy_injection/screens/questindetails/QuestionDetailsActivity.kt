@@ -2,44 +2,33 @@ package com.hantash.dependancy_injection.screens.questindetails
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.hantash.dependancy_injection.Constants
-import com.hantash.dependancy_injection.MyApplication
-import com.hantash.dependancy_injection.R
-import com.hantash.dependancy_injection.networking.StackoverflowApi
 import com.hantash.dependancy_injection.questions.FetchQuestionDetailUseCase
-import com.hantash.dependancy_injection.questions.FetchQuestionsUseCase
+import com.hantash.dependancy_injection.screens.BaseActivity
 import com.hantash.dependancy_injection.screens.ScreensNavigator
 import com.hantash.dependancy_injection.screens.common.dialogs.DialogsNavigator
-import com.hantash.dependancy_injection.screens.common.dialogs.ServerErrorDialogFragment
-import com.hantash.dependancy_injection.screens.common.toolbar.MyToolbar
+import com.hantash.dependancy_injection.screens.common.viewmvc.ViewMvcFactory
 import kotlinx.coroutines.*
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.Listener {
+class QuestionDetailsActivity : BaseActivity(), QuestionDetailsViewMvc.Listener {
+    @Inject lateinit var viewMvcFactory: ViewMvcFactory
+    @Inject lateinit var screensNavigator: ScreensNavigator
+    @Inject lateinit var dialogsNavigator: DialogsNavigator
+    @Inject lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
+
     private lateinit var viewMvc: QuestionDetailsViewMvc
-    private lateinit var fetchQuestionDetailUseCase: FetchQuestionDetailUseCase
-    private lateinit var dialogsNavigator: DialogsNavigator
-    private lateinit var screensNavigator: ScreensNavigator
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private lateinit var questionId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        presentationComponent.inject(this)
         super.onCreate(savedInstanceState)
-        viewMvc = QuestionDetailsViewMvc(LayoutInflater.from(this), null)
-        setContentView(viewMvc.rootView)
 
-        fetchQuestionDetailUseCase = FetchQuestionDetailUseCase((application as MyApplication).stackoverflowApi)
-        dialogsNavigator = DialogsNavigator(supportFragmentManager)
-        screensNavigator = ScreensNavigator(this)
+        viewMvc = viewMvcFactory.newQuestionDetailViewMvc(null)
+        setContentView(viewMvc.rootView)
 
         // retrieve question ID passed from outside
         questionId = intent.extras!!.getString(EXTRA_QUESTION_ID)!!
@@ -64,7 +53,7 @@ class QuestionDetailsActivity : AppCompatActivity(), QuestionDetailsViewMvc.List
                 when (val result = fetchQuestionDetailUseCase.fetchQuestionById(questionId)) {
                     is FetchQuestionDetailUseCase.Result.SUCCESS -> {
                         val questionBody = result.questionDetail.body
-                        viewMvc.updateQuestion(questionBody)
+                        viewMvc.updateQuestion(result.questionDetail)
                     }
                     is FetchQuestionDetailUseCase.Result.FAILURE ->  onFetchFailed()
                 }
