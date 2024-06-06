@@ -42,8 +42,9 @@
 - Modules are classes annotated with @Module
 - Methods in modules that provide services are annotated with @Provides
 - Provided services can be used as method arguments in other provider mwthods
-- Scopes are annotations, annotated with @Scope
+- We can't provide more than one provider methods with samme return type
 #### Scoped
+- Scopes are annotations, annotated with @Scope
 - Components that provide scoped service (scoped provider) must be scoped
 - All clients get the same instance of a scoped service from the same instance of a component
 #### Component as injector
@@ -70,7 +71,14 @@
 #### Automatic Discovery of Services (Instances)
 - Dagger can automatically discover services having a public constructor annotated with @inject annotation
 - Automatic discovered services can be scoped
-
-
+#### Type Binding
+- @Binds allow to map specific provided type to another provided type (e.g. provide implementation of an interface)
+- Custom bindings using @Binds must be defined as abstract functions in abstract modules.
+- Abstract @Binds function can't coexist with non static provider methods in the same module. Therefore non static provider methods must be define inside companion object.
+#### Qualifiers
+- Qualifier are annotation class annotated with @Qualifier
+- As in Dagger, we can't provide more than one provider methods of the same type. With the help of qualifiers we can do it by differentiating the same providers by using different qualifier.
+#### Provider
+- Provider is used when you need to perform late injection
 
 
