@@ -1,11 +1,10 @@
 package com.hantash.dependancy_injection.screens.questionlist
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import com.hantash.dependancy_injection.questions.FetchQuestionsUseCase
 import com.hantash.dependancy_injection.questions.Question
 import com.hantash.dependancy_injection.screens.BaseActivity
-import com.hantash.dependancy_injection.screens.ScreensNavigator
+import com.hantash.dependancy_injection.screens.common.navigator.ScreensNavigator
 import com.hantash.dependancy_injection.screens.common.dialogs.DialogsNavigator
 import com.hantash.dependancy_injection.screens.common.viewmvc.ViewMvcFactory
 import kotlinx.coroutines.*

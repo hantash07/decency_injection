@@ -1,4 +1,4 @@
-package com.hantash.dependancy_injection.screens
+package com.hantash.dependancy_injection.screens.common.navigator
 
 import android.app.Activity
 import com.hantash.dependancy_injection.screens.questindetails.QuestionDetailsActivity

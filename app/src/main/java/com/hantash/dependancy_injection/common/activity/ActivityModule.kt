@@ -2,9 +2,7 @@ package com.hantash.dependancy_injection.common.activity
 
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import com.hantash.dependancy_injection.common.app.AppComponent
-import com.hantash.dependancy_injection.common.app.AppModule
-import com.hantash.dependancy_injection.screens.ScreensNavigator
+import com.hantash.dependancy_injection.screens.common.navigator.ScreensNavigator
 import dagger.Module
 import dagger.Provides
 
