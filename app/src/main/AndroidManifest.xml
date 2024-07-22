@@ -32,6 +32,8 @@
 
         <activity android:name=".screens.questindetails.QuestionDetailsActivity"/>
 
+        <activity android:name=".screens.viewmodel.ViewModelActivity"/>
+
     </application>
 
 </manifest>

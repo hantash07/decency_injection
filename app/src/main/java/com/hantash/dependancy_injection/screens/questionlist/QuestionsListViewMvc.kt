@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hantash.dependancy_injection.R
 import com.hantash.dependancy_injection.questions.Question
+import com.hantash.dependancy_injection.screens.common.toolbar.MyToolbar
 import com.hantash.dependancy_injection.screens.common.viewmvc.BaseViewMvc
 
 class QuestionsListViewMvc(
@@ -22,13 +23,23 @@ class QuestionsListViewMvc(
     interface Listener {
         fun onRefreshClicked()
         fun onQuestionClicked(question: Question)
+        fun onViewModelClicked()
     }
 
+    private var toolbar: MyToolbar
     private var swipeRefresh: SwipeRefreshLayout
     private var recyclerView: RecyclerView
     private var questionsAdapter: QuestionsAdapter
 
     init {
+        // init toolbar
+        toolbar = findViewById(R.id.toolbar)
+        toolbar.setViewModelListener {
+            for (listener in listeners) {
+                listener.onViewModelClicked()
+            }
+        }
+
         // init pull-down-to-refresh
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener {

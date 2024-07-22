@@ -71,4 +71,8 @@ class QuestionsListActivity : BaseActivity(), QuestionsListViewMvc.Listener {
     override fun onQuestionClicked(question: Question) {
         screensNavigator.toQuestionDetail(question.id)
     }
+
+    override fun onViewModelClicked() {
+        screensNavigator.toViewModelActivity()
+    }
 }
