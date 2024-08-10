@@ -6,7 +6,7 @@ import com.hantash.dependancy_injection.screens.viewmodel.ViewModelActivity
 import dagger.Subcomponent
 
 @PresentationScope
-@Subcomponent(modules = [PresentationModule::class])
+@Subcomponent(modules = [PresentationModule::class, MyViewModelModule::class])
 interface PresentationComponent {
 
     fun inject(questionsListActivity: QuestionsListActivity)

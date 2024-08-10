@@ -7,16 +7,18 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class MyViewModelFactory @Inject constructor(
-    private val viewModelProvider: Provider<MyViewModel>,
-    private val viewModelProvider2: Provider<MyViewModel2>
+    private val viewModelProviders : Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return when (modelClass) {
-            MyViewModel::class.java -> viewModelProvider.get() as T
-            MyViewModel2::class.java -> viewModelProvider2.get() as T
-            else -> throw RuntimeException("Unsupported ViewModel Type $modelClass")
-        }
+        val provider = viewModelProviders[modelClass]
+        return provider?.get() as? T ?: throw RuntimeException("Unsupported ViewModel Type $modelClass")
+
+//        return when (modelClass) {
+//            MyViewModel::class.java -> viewModelProvider.get() as T
+//            MyViewModel2::class.java -> viewModelProvider2.get() as T
+//            else -> throw RuntimeException("Unsupported ViewModel Type $modelClass")
+//        }
 
     }
 
