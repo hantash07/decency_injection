@@ -83,5 +83,12 @@
 
 
 ### Hilt - Conventions
+- Standalone library that wraps around Dagger2
 - 
+
+
+
+
+
+
 
