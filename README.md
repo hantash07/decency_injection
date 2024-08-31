@@ -23,7 +23,10 @@
 - Method injection is commonly used in Java and it will not be used in Kotlin instead we can use property injection.
 
 ### Construction Injection
-- Dependencies are provided to a class through its constructor. When the instance of a class is created, the depencies are provided to that class.
+- Dependencies are provided to a class through its constructor.
+- During the creation of an object, the dependencies are provided.
+- Dependencies can be declared as val, ensuring they are immutable and must be provided at the time of object creation.
+- Usage: Better for classes with clear and explicit dependencies, promoting immutability and testability.
   ```
   class Engine @Inject constructor() {
     fun start() {
@@ -39,16 +42,20 @@
   }
   ```
   #### Advantages
-  - Immutability: Dependencies can be declared as val, ensuring they are immutable and must be provided at the time of object creation.
-  - Fail-Fast: If a required dependency is not provided, the issue will be caught at object creation time.
-  - Testability: Since dependencies are explicitly passed through the constructor, it's easier to test the class by passing mock or stub implementations.
+  - Easy to find issue in the dependencies. If there is any issue in the dependencies it is easy to find out because dependencies are provide during object creation.
+  - Immutability: 
+  - Easy to test. Since dependencies are explicitly passed through the constructor, it's easier to test the class by passing mock or stub implementations.
 
   #### Disadvantages
-  - More Verbose: For classes with many dependencies, the constructor can become large
-  - Inflexibility: If the dependencies change frequently, constructor injection might require frequent refactoring.
+  - Classes with many dependencies become larger and difficult to manamge.
+  - Don't work with predefine frameworks (e.g., Activity, Service or Fragment). If we can't control the constructor of an object and this is created by system, then constructor injection is not applicable.
+
 
 ### Field Injection
-- Dependencies are directly provided into the fields of a class. Dependencies are provided after class creation.
+- Dependencies are directly provided into the fields of a class.
+- When object is created then depencies are provided to that class.
+- Late Initialization.
+- Usage: Useful in situations where you don't control object creation, or where you want to add dependencies without modifying the constructor. However, it should be used with caution due to the potential downsides regarding testability and clarity.
   ```
   class Engine @Inject constructor() {
     fun start() {
@@ -71,10 +78,8 @@
   - Works with Frameworks: Useful in frameworks where objects are created by the system and you don't control the constructor (e.g., Android Activities or Fragments).
 
   #### Disadvantages
-  - Testability: Field injection makes it harder to test, as dependencies are injected after object creation. You may need a DI framework running to perform tests.
-  - Late Initialization: Since fields are initialized after the constructor, there’s a risk of NullPointerException if the fields are accessed before injection.
-  - No Immutability: Dependencies cannot be val (immutable) if they are injected via fields, which might lead to accidental reassignments.
-
+  - There is a risk of `NullPointerException`. If there is any issues in dependencies, these issues can be find out during run time, as dependencies are injected into fields after object creation.
+  - Difficult to test as dependencies are injected after object creation. You may need a DI framework running to perform tests.
 
 ### Main Benefits:
 1. Non repetitive definations of the entire object.
