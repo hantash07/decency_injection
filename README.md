@@ -112,6 +112,51 @@
   - Less Common: It's less common than constructor or field injection.
   - Complexity: Increases the complexity of dependency management, especially in larger projects where multiple methods require injection.
 
+### Types of Binding in DI
+- Binding tells dependency injection how to construct the object or where to get the dependencies.
+- Following are the types:
+  
+  #### 1. @Provide Method Binding
+  - This is the most common type of binding where you use a @Provides method inside a Dagger module to tell Dagger how to construct a particular type.
+  - Use @Provides when the dependency cannot be created using a constructor or when you need to control the creation of the instance.
+
+  #### 2. @Bind Method Binding
+  - It is more efficient alternative to @Provides when binding an interface to an implementation, as it avoids the overhead of a method call and directly binds the type at compile-time.
+  - Use @Binds when you are simply binding an interface to a concrete implementation and the implementation can be provided by a constructor.
+    ```
+    @Module
+    interface NetworkModule {
+
+      @Binds
+      fun bindApiService(apiServiceImpl: ApiServiceImpl): ApiService
+    }
+    ```
+  - This tells Dagger that when ApiService is requested, it should provide an instance of ApiServiceImpl. The advantage of @Binds is that it’s more efficient since it does not require a method body.
+  #### 3. @Inject Constructor Binding
+  - This binding method uses @Inject annotations on the constructor of a class to automatically inform Dagger how to instantiate the class.
+  - Use @Inject on constructors if you want dagger to automatically figure out how the dependency without using module.
+  - 
+
+  #### 4. Multibindings
+  - Dagger provides support for multibindings, allowing you to inject collections (sets or maps) of objects rather than a single instance.
+  - Use multibindings when you need to inject a collection of implementations, such as a set of plugins or a map of commands.
+    ```
+    @Module
+    class PluginModule {
+
+      @Provides
+      @IntoSet
+      fun provideLoggingPlugin(): Plugin {
+          return LoggingPlugin()
+      }
+
+      @Provides
+      @IntoSet
+      fun provideAnalyticsPlugin(): Plugin {
+          return AnalyticsPlugin()
+      }
+    }
+    ```
 
 ### Main Benefits DI
 1. Non repetitive definations or definations of the entire object.
@@ -143,8 +188,12 @@
   
 #### Scoped
 - Scopes are annotations, annotated with @Scope
-- Components that provide scoped service (scoped provider) must be scoped
 - All clients get the same instance of a scoped service from the same instance of a component
+- It manage the lifecycle of dependencies to ensure that objects are reused appropriately within the context of an application, activity, or fragment.
+- Scopes are typically tied to components in Dagger. A component annotated with a specific scope will provide dependencies that live as long as the component itself.
+- @Singleton is a built-in scope used for application-wide singletons, while custom scopes can be defined for more specific lifecycles, such as activities or fragments.
+- If a component has a scope, all the dependencies it provides should be annotated with the same scope. This ensures consistency in how objects are shared.
+- Subcomponents in Dagger can have different scopes from their parent components. For example, an @ActivityScope subcomponent can depend on a @Singleton parent component. This allows different lifecycles to be managed hierarchically.
 
 #### Component as injector
 - Basically, Components are injectors, they know how to provide (inject) the constructed objects from module into their clients
