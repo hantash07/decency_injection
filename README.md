@@ -6,7 +6,7 @@
 - Class A is a client and class B is a service.
 - Client and Service relation is contextual. It means class A can be a client and service at the same time base on context.
 
-### How Client obtain relation to services:
+### How class obtain relation to another class
 1. Instantiation
 2. Static Method Call
 3. Static Global Variable
@@ -16,7 +16,7 @@
 
 ### Dependency Injection = providing services to clients from outside.
 
-### Three ways to "inject" services from "outside":
+### Three ways to "inject" or receive references from "outside":
 1. Construction Injection
 2. Method Injection
 3. Property Injection
@@ -44,7 +44,6 @@
   ```
   #### Advantages
   - Easy to find issue in the dependencies. If there is any issue in the dependencies it is easy to find out because dependencies are provide during object creation.
-  - Immutability: 
   - Easy to test. Since dependencies are explicitly passed through the constructor, it's easier to test the class by passing mock or stub implementations.
 
   #### Disadvantages
@@ -56,7 +55,7 @@
 - Dependencies are directly provided into the fields of a class.
 - When object is created then depencies are provided to that class.
 - Late Initialization.
-- Usage: Useful in situations where you don't control object creation, or where you want to add dependencies without modifying the constructor. However, it should be used with caution due to the potential downsides regarding testability and clarity.
+- Usage: Useful in situations where you don't control object creation, or where you want to add dependencies without modifying the constructor.
   ```
   class Engine @Inject constructor() {
     fun start() {
@@ -123,6 +122,7 @@
 
   #### 2. @Bind Method Binding
   - It is more efficient alternative to @Provides when binding an interface to an implementation, as it avoids the overhead of a method call and directly binds the type at compile-time.
+  - This type is used if you want to create an instance from interface. The interface is converted into concrete implementation.
   - Use @Binds when you are simply binding an interface to a concrete implementation and the implementation can be provided by a constructor.
     ```
     @Module
@@ -133,11 +133,11 @@
     }
     ```
   - This tells Dagger that when ApiService is requested, it should provide an instance of ApiServiceImpl. The advantage of @Binds is that it’s more efficient since it does not require a method body.
+  
   #### 3. @Inject Constructor Binding
   - This binding method uses @Inject annotations on the constructor of a class to automatically inform Dagger how to instantiate the class.
   - Use @Inject on constructors if you want dagger to automatically figure out how the dependency without using module.
-  - 
-
+  
   #### 4. Multibindings
   - Dagger provides support for multibindings, allowing you to inject collections (sets or maps) of objects rather than a single instance.
   - Use multibindings when you need to inject a collection of implementations, such as a set of plugins or a map of commands.
