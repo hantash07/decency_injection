@@ -236,11 +236,11 @@
 
 #### Provider
 - Provider is used when you need to perform late injection
+- Retrieve multiple instances
 
 
 ### Hilt - Conventions
 - Standalone library that wraps around Dagger2
-- 
 
 
 
