@@ -239,8 +239,34 @@
 - Retrieve multiple instances
 
 
-### Hilt - Conventions
-- Standalone library that wraps around Dagger2
+## Hilt
+- Hilt is built on top of Dagger and provides a set of standard components and annotations to make dependency injection easy in Android applications.
+- With help of pre-defined components, it make easy to setup and use Dagger.
+
+### Hilt Component
+- Hilt provides pre-defined components that correspond to common Android lifecycle components.
+- Component lifetimes are linked with the creation and destruction of a corresponding instance of an Android class.
+  - **ApplicationComponent (@Singleton):** Lives for the entire lifecycle of the application. Dependencies provided in this component are singletons.
+  - **ActivityComponent (@ActivityScoped):** Lives as long as the activity. Dependencies scoped to this component will be recreated for each new activity instance.
+  - **FragmentComponent (@FragmentScoped):** Lives as long as the fragment. Dependencies are unique to the fragment.
+  - **ViewModelComponent (@ViewModelScoped):** Tied to the lifecycle of a ViewModel.
+  - **ServiceComponent (@ServiceScoped):** Lives as long as the service.
+  - **ViewComponent (@ViewScoped):** Tied to the lifecycle of a view.
+  - **ViewWithFragmentComponent (@ViewScoped):** Tied to the lifecycle of a view within a fragment.
+- Each Hilt components has its own defualt data or binding. This data can be used in creating custom binding in modules.
+  - **SingletonComponent** -> Application
+  - **ActivityRetainedComponent** -> ActivityRetainedLifecycle
+  - **ViewModelComponent** -> SavedStateHandle, ViewModelLifecycle
+  - **ActivityComponent** -> Activity, FragmentActivity
+  - **FragmentComponent** -> Fragment
+  - **ViewComponent** -> View
+  - **ViewWithFragmentComponent** -> View
+  - **ServiceComponent** -> Service
+
+### Scoped vs Unscoped bindings
+- By default, all bindings in Dagger are “unscoped”. This means that each time the binding is requested, Dagger will create a new instance of the binding.
+-  Dagger also allows a binding to be “scoped” to a particular component. A scoped binding will only be created once per instance of the component it’s scoped to, and all requests for that binding will share the same instance. In short an scoped binding will share same instance as long as the associated component exist.
+- A common misconception is that all bindings declared in a module will be scoped to the component the module is installed in. However, this isn’t true. Only bindings declarations annotated with a scope annotation will be scoped.
 
 
 
