@@ -284,6 +284,17 @@
 
 - ViewModels are supported via a separate API @HiltViewModel.
 - ContentProviders are not directly supported due to their onCreate being called at startup.
+- When adding to other types, note that as a general rule, Hilt types need to be attached to other Hilt types to work. So before adding [@AndroidEntryPoint] to a fragment, the activity must be annotated as well.
+
+#### Retained Fragments
+- Calling setRetainInstance(true) in a Fragment’s onCreate method will keep a fragment instance across configuration changes.
+- If Hilt Fragment is retained, a runtime exeption will be thrown on configuration changes.
+- A Hilt fragment should never be retained because it holds a reference to the component and that component holds references to the previous Activity instance. In addition, scoped bindings and providers that are injected into the fragment can also cause memory leaks if a Hilt fragment is retained.
+- A non-Hilt fragment can be retained, even if attached to a Hilt activity. However, if that fragment contains a Hilt child fragment, a runtime exception will be thrown when a configuration change occurs.
+
+#### Views with Fragment Binding
+- By default, only SingletonComponent and ActivityComponent bindings can be injected into the view. To enable fragment bindings in your view, add the @WithFragmentBindings annotation to your class.
+
 
 
 
