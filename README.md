@@ -268,6 +268,23 @@
 -  Dagger also allows a binding to be “scoped” to a particular component. A scoped binding will only be created once per instance of the component it’s scoped to, and all requests for that binding will share the same instance. In short an scoped binding will share same instance as long as the associated component exist.
 - A common misconception is that all bindings declared in a module will be scoped to the component the module is installed in. However, this isn’t true. Only bindings declarations annotated with a scope annotation will be scoped.
 
+### Hilt Application
+- All apps using Hilt must contain an Application class annotated with @HiltAndroidApp
+- @HiltAndroidApp kicks off the code generation of the Hilt components and also generates a base class for your application that uses those generated components.
+- Just like other Hilt Android entry points, Application's members injected as well. This means you can use injected fields in the Application after super.onCreate() has been called.
+
+### Android Entry Points
+- Once you have enabled members injection in your Application, you can start enabling members injection in your other Android classes using the @AndroidEntryPoint annotation.
+- You can use @AndroidEntryPoint on the following types:
+  1. Activity
+  2. Fragment
+  3. View
+  4. Service
+  5. BroadcastReceiver
+
+- ViewModels are supported via a separate API @HiltViewModel.
+- ContentProviders are not directly supported due to their onCreate being called at startup.
+
 
 
 
