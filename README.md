@@ -295,6 +295,60 @@
 #### Views with Fragment Binding
 - By default, only SingletonComponent and ActivityComponent bindings can be injected into the view. To enable fragment bindings in your view, add the @WithFragmentBindings annotation to your class.
 
+### Hilt View Model
+- To enable injection of a ViewModel by Hilt use the @HiltViewModel annotation.
+- Only dependencies from the ViewModelComponent and its parent components (e.g., SingletonComponent and ActivityRetainedComponent) can be provided into the ViewModel.
+- All Hilt View Models are provided by the ViewModelComponent which follows the same lifecycle as a ViewModel, i.e. it survives configuration changes.
+- To scope a dependency to a ViewModel use the @ViewModelScoped annotation.
+- Dependencies annotated with @ViewModelScoped are created and shared within the same ViewModel instance but will be discarded once the ViewModel is cleared.
+- @ViewModelScoped dependencies live as long as the ViewModel.
+- This is useful for resources that should be shared and retained within a single ViewModel instance.
+- Following are the Use Cases for @ViewModelScoped:
+  1. **Repository Sharing:** When you want to share a repository or other data source across different methods in the ViewModel while maintaining the same instance for the lifecycle of the ViewModel.
+  2. **Expensive Initialization:** If you have a dependency that is expensive to create, scoping it to the ViewModel can avoid reinitializing it unnecessarily.
+- @ViewModelScoped ensures that dependencies live as long as a ViewModel and are shared within the same ViewModel instance.
+- Use @InstallIn(ViewModelComponent::class) in your module to bind dependencies to the ViewModel scope.
+- if a @ViewModelScoped dependencies needs to be shared across various View Models then it should be scoped using either @ActivityRetainedScoped or @Singleton.
+
+#### What Happens After a Configuration Change?
+- When the Activity or Fragment is destroyed and recreated, the ViewModel is retained.
+- The Android framework retains the ViewModel using the ViewModelProvider, and Hilt doesn’t need to recreate the ViewModel or its dependencies.
+
+### Hilt Modules
+- Hilt modules are standard Dagger modules that have an additional @InstallIn annotation that determines which Hilt component(s) to install the module into.
+- The modules annotated with @InstallIn will be installed into the corresponding component.
+- Just like in Dagger, installing a module into a component allows that binding to be accessed as a dependency in any child component(s) bases on Hilt Component Hierarchy
+
+#### Using @InstallIn
+- A module is installed in a Hilt Component by annotating the module with the @InstallIn annotation.
+- These annotations are required on all Dagger modules when using Hilt.
+- If a module does not have an @InstallIn annotation, the module will not be part of the component and may result in compilation errors.
+- In Hilt, it's possible to install a module into multiple components. This is useful when you want to provide dependencies across different scopes, such as application-wide (singleton) dependencies and more localized scopes like activities or fragments.
+- You can’t directly specify multiple components in one @InstallIn annotation. Instead, create a module for each component.
+
+### Entry Point
+- Hilt uses entry points to allow dependency injection in classes that Hilt does not automatically inject, such as classes not managed by Android's framework
+- Some Android components or classes cannot be directly injected using Hilt such as custom views, third-party libraries, or services like ContentProvider.
+- Hilt Entry Points allow you to access Hilt's dependency graph outside of Hilt-injected classes.
+- They provide a way to retrieve dependencies where automatic injection via @AndroidEntryPoint is not possible.
+- Following are the scenarios when to use Entry Point
+  1. **Custom Views:** If you have a custom view or class that isn't directly injected by Hilt.
+  2. **Non-Hilt Components:** Classes like ContentProvider and BroadcastReceiver that don’t support @AndroidEntryPoint.
+
+  ```
+  @EntryPoint
+  @InstallIn(ApplicationComponent::class)
+  interface MyEntryPoint {
+      fun getMyDependency(): MyDependency
+  }
+
+  // Usage
+  val entryPoint = EntryPointAccessors.fromApplication(appContext, MyEntryPoint::class.java)
+  val myDependency = entryPoint.getMyDependency()
+  ```
+
+
+
 
 
 
